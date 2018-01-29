@@ -4,12 +4,12 @@ import {Provider} from 'react-redux';
 import AppContainer from './AppContainer.js';
 import DevTools from './DevTools';
 
-export default function Root({ store }) {
+export default function Root({ store, history }) {
+    // add <DevTools /> to test
     return (
         <Provider store={store}>
             <div>
-                <AppContainer />
-                <DevTools />
+                <AppContainer history={history} store={store}/>
             </div>
         </Provider>
     );

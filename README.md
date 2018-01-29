@@ -9,6 +9,7 @@ This is a simple starter to get you up and running for React projects. This is i
 * some helpful tooling for development workflow
 * a similar setup to what you'll see in the wild
 * Heroku-ready deployment setup
+* Introducing react router redux for routing
 
 ## Running
 
@@ -53,9 +54,3 @@ $ heroku open
 Heroku will follow the `build` command in your `package.json` and compile assets with `webpack.prod.config.js`. It runs the Express web server in `server.js`.
 
 If you're unfamiliar with Heroku deployment (or just need a refresher), they have a really great walkthrough [here](https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction).
-
-## Running on Glitch
-
-1. Go to https://glitch.com/edit/#!/horizons-hackathon-react and click
-  `Remix this 🎤`
-1. Click `Show` at the top to preview your app!
