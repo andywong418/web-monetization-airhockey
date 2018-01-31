@@ -23,7 +23,7 @@ class Home extends React.Component {
 }
 const mapStateToProps = (state) => {
     return {
-        name: state.name
+        name: state.rootReducer.name
     };
 };
 
