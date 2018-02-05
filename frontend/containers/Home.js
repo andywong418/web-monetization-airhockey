@@ -2,7 +2,7 @@ import Proptypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
-import CardContainer from '../components/CardContainer';
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -14,7 +14,8 @@ class Home extends React.Component {
   render() {
     return (
       <div>
-        <CardContainer />
+        <h1>{this.props.name}</h1>
+        <Link to={"/anotherPage"}> Click Here </Link>
       </div>
     );
   }
