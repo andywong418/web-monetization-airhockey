@@ -6,6 +6,7 @@ import createHistory from 'history/createBrowserHistory';
 import { routerMiddleware} from 'react-router-redux';
 import {browserHistory} from 'react-router';
 export const history = createHistory();
+
 const middleware = routerMiddleware(browserHistory);
 
 export function configureStore(initialState) {

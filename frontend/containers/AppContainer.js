@@ -5,6 +5,7 @@ import Title from '../components/Title';
 import Home from './Home';
 import { Route } from 'react-router-dom';
 import AnotherPage from '../components/AnotherPage';
+import Game from '../components/Game';
 import {ConnectedRouter} from 'react-router-redux';
 import {withRouter} from 'react-router';
 const HomeWrapper = ({name}) => {
@@ -16,7 +17,7 @@ const App = ({ name }) => {
     return (
         <div>
             <Route exact path="/" component={HomeWrapper}/>
-            <Route path="/anotherPage" component={AnotherPage}/>
+            <Route path="/gameOn" component={Game}/>
         </div>
     );
 };
