@@ -30,7 +30,7 @@ class Board extends React.Component {
     };
 
   }
-  changePlayerCoord(key, newCoord) {
+  changeCoord(key, newCoord) {
     this.setState({
       [key]: newCoord
     })
@@ -52,8 +52,21 @@ class Board extends React.Component {
           downY = {this.state.player1downY}
           x = {this.state.player1X}
           downX = {this.state.player1downX}
-          changePlayerCoord = {(key, newCoord) => this.changePlayerCoord(key, newCoord)}
+          changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
         />
+        <Ball
+          player1X = {this.state.player1X}
+          player1Y = {this.state.player1Y}
+          player2X = {this.state.player2X}
+          player2Y = {this.state.player2Y}
+          boardWidth = {this.state.boardWidth}
+          leftOffset = {this.state.leftOffset}
+          x = {this.state.ballX}
+          y = {this.state.ballY}
+          changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
+        />
+
+
       </div>
     )
   }
