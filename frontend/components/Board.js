@@ -28,12 +28,26 @@ class Board extends React.Component {
       ballX: (w*0.7*0.5),
       ballY: 200,
     };
+    this.changeCoord = this.changeCoord.bind(this);
+  }
 
+  componentDidMount() {
+    this.props.socket.on('updateOtherPlayerCoords', data => {
+      this.changeCoord(data.key, data.newCoord);
+    })
   }
   changeCoord(key, newCoord) {
     this.setState({
       [key]: newCoord
-    })
+    });
+    if((this.props.challenger && (key === 'player1X' || key === 'player1Y')) || (!this.props.challenger && (key === 'player2X' || key === 'player2Y'))) {
+      // Broadcast to other side
+      this.props.socket.emit('updateOtherPlayerCoords', {
+        targetSocket: this.props.targetSocket,
+        key,
+        newCoord
+      })
+    }
   }
   render() {
     const boardCss = {
@@ -54,6 +68,8 @@ class Board extends React.Component {
           downX = {this.state.player1downX}
           changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
           player = 'player1'
+          challenger = {this.props.challenger}
+          targetSocket = {this.props.targetSocket}
         />
         <Ball
           player1X = {this.state.player1X}
@@ -75,6 +91,8 @@ class Board extends React.Component {
           downX = {this.state.player2downX}
           changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
           player = 'player2'
+          challenger = {this.props.challenger}
+          targetSocket = {this.props.targetSocket}
         />
 
       </div>

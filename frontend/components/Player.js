@@ -9,11 +9,13 @@ class Player extends React.Component {
   }
 
   dragMouseDown(e) {
-    e = e || window.event;
-    this.props.changeCoord(this.props.player + 'downX', e.clientX);
-    this.props.changeCoord(this.props.player + 'downY', e.clientY)
-    document.onmousemove = this.elementDrag;
-    document.onmouseup = this.closeDragElement;
+    if((this.props.challenger && this.props.player === 'player1') || (!this.props.challenger && this.props.player === 'player2')) {
+      e = e || window.event;
+      this.props.changeCoord(this.props.player + 'downX', e.clientX);
+      this.props.changeCoord(this.props.player + 'downY', e.clientY)
+      document.onmousemove = this.elementDrag;
+      document.onmouseup = this.closeDragElement;
+    }
   }
 
   elementDrag(e) {

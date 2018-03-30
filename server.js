@@ -34,6 +34,14 @@ io.on('connection', socket => {
   socket.on('challengePlayer', targetSocket => {
     socket.broadcast.to(targetSocket).emit('challengeAccepted');
   })
+
+  socket.on('updateOtherPlayerCoords', data => {
+    const {targetSocket, key, newCoord} = data;
+    socket.broadcast.to(targetSocket).emit('updateOtherPlayerCoords', {
+      key,
+      newCoord
+    });
+  })
   socket.on('disconnect', () => {
     delete onlineUsers[socket.id];
   })

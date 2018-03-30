@@ -31,10 +31,11 @@ class Game extends React.Component {
     return (
       <div className="text-center container">
         <h1> Try to put the ball onto the other wall. First to 7 wins! </h1>
+        {this.state.challenger ? <p> You will be playing as Player 1 on your left side </p> : <p> You will be playing as player 2 on your right side </p>}
         {this.state.startGame ?
           <div>
             <p> Player1: {this.state.player1Score}, Player2: {this.state.player2Score} </p>
-            <Board winner={this.state.winner} challenger={this.state.challenger} />
+            <Board winner={this.state.winner} challenger={this.state.challenger} socket = {this.props.socket} targetSocket = {this.props.match.params.id}/>
           </div>
           :
           <p> Waiting for Player 2... </p>}
