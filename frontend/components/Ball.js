@@ -32,17 +32,17 @@ class Ball extends React.Component {
       if(this.props.x + this.state.velocityX >= this.props.boardWidth - 5 || this.props.x <= 5) {
         this.setState({ velocityX: -this.state.velocityX });
       }
-      if(this.props.y + this.state.velocityY >= 390 || this.props.y <= 0) {
+      if(this.props.y + this.state.velocityY >= 390 || this.props.y <= 5) {
         this.setState({ velocityY: -this.state.velocityY });
       }
 
       const player1XDiff = this.props.x - this.props.player1X + this.state.velocityX;
       const player1YDiff = this.props.y - this.props.player1Y + this.state.velocityY;
-      const player2XDiff = this.props.x - this.props.player2X;
-      const player2YDiff = this.props.x - this.props.player2Y;
+      const player2XDiff = this.props.x - this.props.player2X + this.state.velocityX;
+      const player2YDiff = this.props.y - this.props.player2Y + this.state.velocityY;
       const player1Distance = Math.sqrt((player1XDiff * player1XDiff) + (player1YDiff * player1YDiff))
       const player2Distance = Math.sqrt((player2XDiff * player2XDiff) + (player2YDiff * player2YDiff))
-      const minDistance = 20+ 10;
+      // 30 is the radius of the 'hockey stick' and the ball
       if(player1Distance <= 30 || player2Distance <= 30) {
         this.setState({ velocityX: -this.state.velocityX, velocityY: -this.state.velocityY });
       }

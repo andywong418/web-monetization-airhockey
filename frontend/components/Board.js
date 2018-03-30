@@ -1,6 +1,6 @@
 import React from 'react';
-import Player1 from './Player1';
-import Player2 from './Player2';
+import Player from './Player';
+// import Player2 from './Player2';
 import Ball from './Ball';
 
 class Board extends React.Component {
@@ -21,10 +21,10 @@ class Board extends React.Component {
       player1Y: 200,
       player1downX: 5,
       player1downY: 200,
-      player2X: (w*0.7) - 5,
+      player2X: (w*0.7) - 50,
       player2Y: 200,
-      player2downX: (w*0.7) - 5,
-      player2DownY: 200,
+      player2downX: (w*0.7) - 20,
+      player2downY: 200,
       ballX: (w*0.7*0.5),
       ballY: 200,
     };
@@ -45,7 +45,7 @@ class Board extends React.Component {
     boardCss.left = this.state.leftOffset;
     return (
       <div style={boardCss}>
-        <Player1
+        <Player
           boardWidth = {this.state.boardWidth}
           leftOffset = {this.state.leftOffset}
           y = {this.state.player1Y}
@@ -53,6 +53,7 @@ class Board extends React.Component {
           x = {this.state.player1X}
           downX = {this.state.player1downX}
           changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
+          player = 'player1'
         />
         <Ball
           player1X = {this.state.player1X}
@@ -65,7 +66,16 @@ class Board extends React.Component {
           y = {this.state.ballY}
           changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
         />
-
+        <Player
+          boardWidth = {this.state.boardWidth}
+          leftOffset = {this.state.leftOffset}
+          y = {this.state.player2Y}
+          downY = {this.state.player2downY}
+          x = {this.state.player2X}
+          downX = {this.state.player2downX}
+          changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
+          player = 'player2'
+        />
 
       </div>
     )
