@@ -5,24 +5,26 @@ import Title from '../components/Title';
 import Home from './Home';
 import { Route } from 'react-router-dom';
 import AnotherPage from '../components/AnotherPage';
-import Game from '../components/Game';
+import Game from './Game';
 import {ConnectedRouter} from 'react-router-redux';
 import {withRouter} from 'react-router';
-const HomeWrapper = ({name}) => {
+const HomeWrapper = ({name, socket}) => {
+  console.log("WHAT", name, socket);
   return (
-    <Home name={name} />
+    <Home />
   )
 }
-const App = ({ name }) => {
+const App = ({ name, socket }) => {
     return (
         <div>
-            <Route exact path="/" component={HomeWrapper}/>
-            <Route path="/gameOn" component={Game}/>
+            <Route exact path="/" component={Home}/>
+            <Route path="/gameOn/:id/:challenge" component={Game}/>
         </div>
     );
 };
 const NonBlockApp = withRouter(App);
-const AppContainer = ({history, store, name}) => {
+const AppContainer = ({history, store, name, socket}) => {
+
   return(
     <div>
           <ConnectedRouter history={history}>
@@ -37,7 +39,8 @@ AppContainer.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        name: state.name
+        name: state.name,
+        socket: state.rootReducer.socket
     };
 };
 

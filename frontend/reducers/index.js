@@ -1,7 +1,9 @@
 import {combineReducers} from 'redux';
 import {routerReducer} from 'react-router-redux';
+import io from 'socket.io-client';
 
-function rootReducer(state = {name: 'Horizons'}, action) {
+const socket = io()
+function rootReducer(state = {name: 'Horizons', socket}, action) {
     switch (action.type) {
         default:
             return state;
