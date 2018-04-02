@@ -49,6 +49,7 @@ class WebMonetisation {
 
   spend (id, price) {
     const balance = this.buckets.get(id)
+    console.log("spending balance", balance, price);
     if (!balance) {
       throw new Error('No balance found!');
     }
@@ -58,8 +59,7 @@ class WebMonetisation {
       ' price=' + price,
       ' balance=' + balance);
     }
-
-    debug('spent money. id=' + id, 'price=' + price);
+    console.log('spent money. id=' + id, 'price=' + price);
     this.buckets.set(id, balance - price);
   }
 

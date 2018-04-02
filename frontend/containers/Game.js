@@ -6,24 +6,44 @@ class Game extends React.Component {
     super(props);
     console.log("props", props);
     const challenger = props.match.params.challenge === 'challenger' ? true : false;
-    const startGame = props.match.params.challenge === 'challenger' ? false: true;
     this.state = {
       player1Score: 0,
       player2Score: 0,
       winner: null,
-      startGame,
+      startGame: false,
       challenger,
+      paymentRceived: false,
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    //  Pay a small bid into the website. 50 XRP for now.
+    console.log("window monetization id", window.monetizationId);
+    var domain = new URL(window.location).origin;
+    const paymentReceived = await fetch(domain + '/api/content/' + window.monetizationId)
+      .then(response => {
+        console.log("response", response);
+        if(!response.ok) {
+          throw Error('ID undefined!')
+        }
+        return response.json()
+      })
+    console.log("Payment received!", paymentReceived);
+    // const startGame = this.state.challenger ? false: true;
+    if(paymentReceived.paid && !this.state.challenger) {
+      // Site is paid with deposit.
+      this.setState({ startGame: true });
+    }
     const targetSocket = this.props.match.params.id;
     this.props.socket.emit('challengePlayer', targetSocket);
     if(!this.state.challenger) {
       this.props.socket.emit('challengeAccepted', targetSocket)
     }
     this.props.socket.on('challengeAccepted', () => {
-      this.setState({ startGame: true});
+      if(paymentReceived.paid) {
+        this.setState({ startGame: true });
+      }
+      // Throw error message for no payment received.
     })
   }
 

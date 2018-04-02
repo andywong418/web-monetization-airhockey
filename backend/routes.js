@@ -9,8 +9,8 @@ const path = require('path');
 // SAMPLE ROUTE
 router.get('/pay/:id', monetization.receiver());
 
-router.get('/content/:id', monetization.paid({ price: 100, awaitBalance: true }), async (req, res) => {
-  res.send({
+router.get('/content/:id', monetization.paid({ price: 100 }), (req, res) => {
+  res.json({
     paid: true
   });
 })

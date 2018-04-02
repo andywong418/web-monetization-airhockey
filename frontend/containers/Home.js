@@ -49,7 +49,7 @@ class Home extends React.Component {
 
   async componentDidMount() {
       // Check for flat extention - make sure they're paying?
-
+      
       this.props.socket.on('connect', () => {
         this.props.socket.emit('sendUsers', this.state.room);
       });
