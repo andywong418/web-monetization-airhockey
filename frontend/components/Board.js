@@ -59,6 +59,16 @@ class Board extends React.Component {
         ballX: (this.state.boardWidth*0.7*0.5),
         ballY: 200,
       });
+      this.props.socket.emit('updateOtherPlayerCoords', {
+        targetSocket: this.props.targetSocket,
+        key: 'ballX',
+        newCoord: (this.state.boardWidth*0.7*0.5),
+      });
+      this.props.socket.emit('updateOtherPlayerCoords', {
+        targetSocket: this.props.targetSocket,
+        key: 'ballY',
+        newCoord: 200,
+      })
     }
   }
 
