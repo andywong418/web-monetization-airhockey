@@ -95,7 +95,7 @@ class Board extends React.Component {
           changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
           updateScore = {(key) => this.props.updateScore(key)}
           resetBoard = {() => this.resetBoard()}
-
+          challenger = {this.props.challenger}
         />
         <Player
           boardWidth = {this.state.boardWidth}

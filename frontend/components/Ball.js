@@ -62,7 +62,7 @@ class Ball extends React.Component {
         }
       }
 
-    }, 100)
+    }, 40)
   }
 
 
