@@ -51,7 +51,7 @@ io.on('connection', socket => {
     await plugin.connect();
     console.log('sending payment');
     await SPSP.pay(plugin, {
-      receiver: '$123456.localtunnel.me',
+      receiver: '$' + winner + '.localtunnel.me',
       sourceAmount: '200'
     });
     console.log("paid");
