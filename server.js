@@ -5,7 +5,8 @@ const PORT = process.env.PORT || 3000;
 const api = require('./backend/routes');
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
-
+const plugin = require('ilp-plugin')();
+const SPSP = require('ilp-protocol-spsp');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', api);
@@ -42,6 +43,18 @@ io.on('connection', socket => {
       key,
       newCoord
     });
+  })
+
+  socket.on('payWinner', async winner => {
+    // SPSP end point to pay winner?
+    console.log('connecting plugin');
+    await plugin.connect();
+    console.log('sending payment');
+    await SPSP.pay(plugin, {
+      receiver: '$123456.localtunnel.me',
+      sourceAmount: '200'
+    });
+    console.log("paid");
   })
   socket.on('disconnect', () => {
     socket.broadcast.emit('deleteUser', socket.id);

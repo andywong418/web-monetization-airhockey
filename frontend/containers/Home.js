@@ -49,7 +49,7 @@ class Home extends React.Component {
 
   async componentDidMount() {
       // Check for flat extention - make sure they're paying?
-      
+
       this.props.socket.on('connect', () => {
         this.props.socket.emit('sendUsers', this.state.room);
       });
@@ -67,6 +67,7 @@ class Home extends React.Component {
         this.setState({ challenges });
       });
       this.props.socket.on('deleteUser', user => {
+        console.log("deleting user?");
         let onlineUsers = this.state.onlineUsers.slice();
         if(onlineUsers.indexOf(user) !== -1) {
           onlineUsers.splice(onlineUsers.indexOf(user), 1);

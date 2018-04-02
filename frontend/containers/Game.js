@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 class Game extends React.Component {
   constructor(props) {
     super(props);
-    console.log("props", props);
     const challenger = props.match.params.challenge === 'challenger' ? true : false;
     this.state = {
       player1Score: 0,
@@ -12,13 +11,12 @@ class Game extends React.Component {
       winner: null,
       startGame: false,
       challenger,
-      paymentRceived: false,
+      paymentReceived: false,
     }
   }
 
   async componentDidMount() {
     //  Pay a small bid into the website. 50 XRP for now.
-    console.log("window monetization id", window.monetizationId);
     var domain = new URL(window.location).origin;
     const paymentReceived = await fetch(domain + '/api/content/' + window.monetizationId)
       .then(response => {
@@ -48,18 +46,24 @@ class Game extends React.Component {
   }
 
   updateScore(key) {
-    if(this.state[key] + 1 === 2) {
-      this.setState({winner: true, startGame: false})
+    if(this.refs.gameRef) {
+      if(this.state[key] + 1 === 3) {
+        const winner = key === 'player1Score' ? 'Player 1' : 'Player 2';
+
+        this.setState({ winner, startGame: false });
+        this.props.socket.emit('payWinner', 'player1');
+      }
+      this.setState({
+        [key]: this.state[key] + 1
+      })
     }
-    this.setState({
-      [key]: this.state[key] + 1
-    })
+
   }
 
   render() {
 
     return (
-      <div className="text-center container">
+      <div className="text-center container" ref="gameRef">
         <h1> Try to put the ball onto the other wall. First to 7 wins! </h1>
         {this.state.challenger ? <p> You will be playing as Player 1 on your left side </p> : <p> You will be playing as player 2 on your right side </p>}
         {this.state.startGame ?
@@ -73,7 +77,7 @@ class Game extends React.Component {
             />
           </div>
           :
-          <p> Waiting for Player 2... </p>}
+          <p> {this.state.winner ? this.state.winner + ' has won the game and will take the prize money!' : "Waiting for other player..."}</p>}
       </div>
     )
   }

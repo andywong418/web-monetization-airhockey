@@ -37,9 +37,11 @@ class Board extends React.Component {
     })
   }
   changeCoord(key, newCoord) {
-    this.setState({
-      [key]: newCoord
-    });
+    if(this.refs.boardRef) {
+      this.setState({
+        [key]: newCoord
+      });
+    }
     if((this.props.challenger && (key === 'player1X' || key === 'player1Y')) || (!this.props.challenger && (key === 'player2X' || key === 'player2Y'))) {
       // Broadcast to other side
       this.props.socket.emit('updateOtherPlayerCoords', {
@@ -49,6 +51,16 @@ class Board extends React.Component {
       })
     }
   }
+
+  resetBoard() {
+    if(this.refs.boardRef) {
+      this.setState({
+        ballX: (this.state.boardWidth*0.7*0.5),
+        ballY: 200,
+      });
+    }
+  }
+
   render() {
     const boardCss = {
       position: 'fixed',
@@ -58,7 +70,7 @@ class Board extends React.Component {
     boardCss.width = this.state.boardWidth;
     boardCss.left = this.state.leftOffset;
     return (
-      <div style={boardCss}>
+      <div style={boardCss} ref="boardRef">
         <Player
           boardWidth = {this.state.boardWidth}
           leftOffset = {this.state.leftOffset}
@@ -81,6 +93,7 @@ class Board extends React.Component {
           y = {this.state.ballY}
           changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
           updateScore = {(key) => this.props.updateScore(key)}
+          resetBoard = {() => this.resetBoard()}
         />
         <Player
           boardWidth = {this.state.boardWidth}
