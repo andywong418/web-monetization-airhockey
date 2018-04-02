@@ -42,10 +42,13 @@ class Board extends React.Component {
     })
     this.props.socket.on('updateBoardSize', data => {
       const { boardWidth, leftOffset} = data;
-      this.setState({
-        boardWidth,
-        leftOffset
-      })
+      if(boardWidth < this.state.boardWidth) {
+        this.setState({
+          boardWidth,
+          leftOffset
+        })
+      }
+
     })
   }
   changeCoord(key, newCoord) {
