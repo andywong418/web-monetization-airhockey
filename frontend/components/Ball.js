@@ -47,10 +47,9 @@ class Ball extends React.Component {
         if(player1Distance <= 30 || player2Distance <= 30) {
           this.setState({ velocityX: -this.state.velocityX, velocityY: -this.state.velocityY });
         }
-        if(this.props.challenger) {
-          this.props.changeCoord('ballX', this.props.x + this.state.velocityX);
-          this.props.changeCoord('ballY', this.props.y + this.state.velocityY);
-        }
+        this.props.changeCoord('ballX', this.props.x + this.state.velocityX);
+        this.props.changeCoord('ballY', this.props.y + this.state.velocityY);
+      
         if(this.props.x + this.state.velocityX < 0) {
           //Player 2 gets a point
           this.props.updateScore('player2Score');
