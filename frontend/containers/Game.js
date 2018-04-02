@@ -43,6 +43,9 @@ class Game extends React.Component {
       }
       // Throw error message for no payment received.
     })
+    this.props.socket.on('updateScore', key => {
+      this.updateScore(key);
+    })
   }
 
   updateScore(key) {
@@ -56,6 +59,7 @@ class Game extends React.Component {
       this.setState({
         [key]: this.state[key] + 1
       })
+      this.props.socket.emit('updateScore', key);
     }
 
   }

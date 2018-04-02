@@ -67,7 +67,6 @@ class Home extends React.Component {
         this.setState({ challenges });
       });
       this.props.socket.on('deleteUser', user => {
-        console.log("deleting user?");
         let onlineUsers = this.state.onlineUsers.slice();
         if(onlineUsers.indexOf(user) !== -1) {
           onlineUsers.splice(onlineUsers.indexOf(user), 1);
