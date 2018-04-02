@@ -44,7 +44,10 @@ io.on('connection', socket => {
       newCoord
     });
   })
-
+  socket.on('updateScore', data => {
+    const {targetSocket, key} = data;
+    socket.broadcast.to(targetSocket).emit('updateScore', key);
+  })
   socket.on('payWinner', async winner => {
     // SPSP end point to pay winner?
     console.log('connecting plugin');

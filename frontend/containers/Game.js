@@ -69,7 +69,10 @@ class Game extends React.Component {
       this.setState({
         [key]: this.state[key] + 1
       })
-      this.props.socket.emit('updateScore', key);
+      this.props.socket.emit('updateScore', {
+        targetSocket: this.props.targetSocket,
+        key,
+      });
     }
 
   }
