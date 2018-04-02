@@ -22,22 +22,22 @@ class Player extends React.Component {
     e = e || window.event;
     const pos1 = this.props.downX - e.clientX;
     const pos2 = this.props.downY - e.clientY;
-    if(this.props.player === 'player1') {
+    if(this.props.player === 'player1' && this.refs.player1) {
       if(this.refs.player1.offsetLeft - pos1 >= 0 && this.refs.player1.offsetLeft - pos1 <= (this.props.boardWidth/2) - 20) {
         this.props.changeCoord('player1downX', e.clientX);
         this.props.changeCoord('player1X', this.refs.player1.offsetLeft - pos1);
       }
-      if(this.refs.player1.offsetTop - pos2 >= 0 && this.refs.player1.offsetTop - pos2 <= 360) {
+      if(this.refs.player1 && this.refs.player1.offsetTop - pos2 >= 0 && this.refs.player1.offsetTop - pos2 <= 360) {
         this.props.changeCoord('player1downY', e.clientY);
         this.props.changeCoord('player1Y', this.refs.player1.offsetTop - pos2);
       }
     }
-    if(this.props.player === 'player2') {
+    if(this.props.player === 'player2' && this.refs.player2) {
       if(this.refs.player2.offsetLeft - pos1 >= (this.props.boardWidth/2) + 20 && this.refs.player2.offsetLeft - pos1 <= this.props.boardWidth - 20) {
         this.props.changeCoord('player2downX', e.clientX);
         this.props.changeCoord('player2X', this.refs.player2.offsetLeft - pos1);
       }
-      if(this.refs.player2.offsetTop - pos2 >= 0 && this.refs.player2.offsetTop - pos2 <= 360) {
+      if(this.refs.player2 && this.refs.player2.offsetTop - pos2 >= 0 && this.refs.player2.offsetTop - pos2 <= 360) {
         this.props.changeCoord('player2downY', e.clientY);
         this.props.changeCoord('player2Y', this.refs.player2.offsetTop - pos2);
       }
