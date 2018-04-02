@@ -36,7 +36,9 @@ class Board extends React.Component {
     this.props.socket.on('updateOtherPlayerCoords', data => {
       this.changeCoord(data.key, data.newCoord);
     })
+    console.log("this.props", this.props.match.params);
     this.props.socket.emit('updateBoardSize', {
+      targetSocket: this.props.params.id,
       leftOffset: this.state.leftOffset,
       boardWidth: this.state.boardWidth,
     })

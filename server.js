@@ -44,10 +44,12 @@ io.on('connection', socket => {
       newCoord
     });
   })
-  socket.on('updateScore', data => {
-    const {targetSocket, key} = data;
-    console.log("targetSocket", key, targetSocket);
-    socket.broadcast.to(targetSocket).emit('updateScore', key);
+  socket.on('updateBoardSize', data => {
+    const {targetSocket, leftOffset, boardWidth} = data;
+    socket.broadcast.to(targetSocket).emit('updateBoardSize', {
+      leftOffset,
+      boardWidth,
+    })
   })
   socket.on('payWinner', async winner => {
     // SPSP end point to pay winner?
