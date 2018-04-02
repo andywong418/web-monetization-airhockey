@@ -21,6 +21,7 @@ io.on('connection', socket => {
     const userList = [];
     for(let key in onlineUsers) {
       if(key !== socket.id) {
+        console.log(key);
         userList.push(key);
       }
     }
@@ -43,6 +44,7 @@ io.on('connection', socket => {
     });
   })
   socket.on('disconnect', () => {
+    socket.broadcast.emit('deleteUser', socket.id);
     delete onlineUsers[socket.id];
   })
 })

@@ -26,6 +26,16 @@ class Game extends React.Component {
       this.setState({ startGame: true});
     })
   }
+
+  updateScore(key) {
+    if(this.state[key] + 1 === 2) {
+      this.setState({winner: true, startGame: false})
+    }
+    this.setState({
+      [key]: this.state[key] + 1
+    })
+  }
+
   render() {
 
     return (
@@ -35,7 +45,12 @@ class Game extends React.Component {
         {this.state.startGame ?
           <div>
             <p> Player1: {this.state.player1Score}, Player2: {this.state.player2Score} </p>
-            <Board winner={this.state.winner} challenger={this.state.challenger} socket = {this.props.socket} targetSocket = {this.props.match.params.id}/>
+            <Board winner={this.state.winner}
+              challenger={this.state.challenger}
+              socket = {this.props.socket}
+              targetSocket = {this.props.match.params.id}
+              updateScore = {(key) => this.updateScore(key)}
+            />
           </div>
           :
           <p> Waiting for Player 2... </p>}

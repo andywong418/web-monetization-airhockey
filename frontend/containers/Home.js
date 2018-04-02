@@ -2,6 +2,40 @@ import Proptypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
+import axios from 'axios';
+
+function u8tohex (arr) {
+  var vals = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' ]
+  var ret = ''
+  for (var i = 0; i < arr.length; ++i) {
+    ret += vals[(arr[i] & 0xf0) / 0x10]
+    ret += vals[(arr[i] & 0x0f)]
+  }
+  return ret
+}
+
+function getMonetizationId (receiverUrl) {
+  return new Promise((resolve, reject) => {
+    window.addEventListener('load', function () {
+      var idBytes = new Uint8Array(16)
+      crypto.getRandomValues(idBytes)
+      var id = u8tohex(idBytes)
+      var receiver = receiverUrl.replace(/:id/, id)
+
+      if (window.monetize) {
+        window.monetize({
+          receiver
+        })
+        resolve(id)
+      } else {
+        console.log('Your extension is disabled or not installed.' +
+          ' Manually pay to ' + receiver)
+        reject(new Error('web monetization is not enabled'))
+      }
+    })
+  })
+}
+
 
 class Home extends React.Component {
   constructor(props) {
@@ -13,25 +47,31 @@ class Home extends React.Component {
     }
   }
 
-  componentDidMount() {
-      console.log("what", this.props);
+  async componentDidMount() {
+      // Check for flat extention - make sure they're paying?
+
       this.props.socket.on('connect', () => {
         this.props.socket.emit('sendUsers', this.state.room);
-      })
+      });
       this.props.socket.on('getUsers', userList => {
-        console.log("USER LIST?", userList);
         this.setState({ onlineUsers: userList });
-      })
+      });
       this.props.socket.on('newEntrant', newEntrant => {
-        console.log("NEW", newEntrant);
         const newOnlineUsers = this.state.onlineUsers.slice();
         newOnlineUsers.push(newEntrant);
         this.setState({ onlineUsers: newOnlineUsers });
-      })
+      });
       this.props.socket.on('challengePlayer', challenger => {
         const challenges = this.state.challenges.slice();
         challenges.push(challenger);
         this.setState({ challenges });
+      });
+      this.props.socket.on('deleteUser', user => {
+        let onlineUsers = this.state.onlineUsers.slice();
+        if(onlineUsers.indexOf(user) !== -1) {
+          onlineUsers.splice(onlineUsers.indexOf(user), 1);
+          this.setState({ onlineUsers });
+        }
       })
   }
 

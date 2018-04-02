@@ -69,7 +69,6 @@ class Board extends React.Component {
           changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
           player = 'player1'
           challenger = {this.props.challenger}
-          targetSocket = {this.props.targetSocket}
         />
         <Ball
           player1X = {this.state.player1X}
@@ -81,6 +80,7 @@ class Board extends React.Component {
           x = {this.state.ballX}
           y = {this.state.ballY}
           changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
+          updateScore = {(key) => this.props.updateScore(key)}
         />
         <Player
           boardWidth = {this.state.boardWidth}
@@ -92,7 +92,6 @@ class Board extends React.Component {
           changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
           player = 'player2'
           challenger = {this.props.challenger}
-          targetSocket = {this.props.targetSocket}
         />
 
       </div>
