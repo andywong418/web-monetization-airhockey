@@ -42,7 +42,7 @@ class Board extends React.Component {
         [key]: newCoord
       });
     }
-    if((this.props.challenger && (key === 'player1X' || key === 'player1Y')) || (!this.props.challenger && (key === 'player2X' || key === 'player2Y')) || key === 'ballX' || key === 'ballY') {
+    if((this.props.challenger && (key === 'player1X' || key === 'player1Y')) || (!this.props.challenger && (key === 'player2X' || key === 'player2Y'))) {
       // Broadcast to other side. Need to broadcast ball position as well.
       this.props.socket.emit('updateOtherPlayerCoords', {
         targetSocket: this.props.targetSocket,
