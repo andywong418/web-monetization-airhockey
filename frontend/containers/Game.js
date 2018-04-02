@@ -43,19 +43,19 @@ class Game extends React.Component {
       }
       // Throw error message for no payment received.
     })
-    this.props.socket.on('updateScore', key => {
-      if(this.refs.gameRef) {
-        if(this.state[key] + 1 === 3) {
-          const winner = key === 'player1Score' ? 'Player 1' : 'Player 2';
-          const winnerPaymentPointer = key === 'player1Score' ? 'player1' : 'player2';
-          this.setState({ winner, startGame: false });
-          this.props.socket.emit('payWinner', winnerPaymentPointer);
-        }
-        this.setState({
-          [key]: this.state[key] + 1
-        })
-      }
-    })
+    // this.props.socket.on('updateScore', key => {
+    //   if(this.refs.gameRef) {
+    //     if(this.state[key] + 1 === 3) {
+    //       const winner = key === 'player1Score' ? 'Player 1' : 'Player 2';
+    //       const winnerPaymentPointer = key === 'player1Score' ? 'player1' : 'player2';
+    //       this.setState({ winner, startGame: false });
+    //       this.props.socket.emit('payWinner', winnerPaymentPointer);
+    //     }
+    //     this.setState({
+    //       [key]: this.state[key] + 1
+    //     })
+    //   }
+    // })
   }
 
   updateScore(key) {
@@ -69,10 +69,10 @@ class Game extends React.Component {
       this.setState({
         [key]: this.state[key] + 1
       })
-      this.props.socket.emit('updateScore', {
-        targetSocket: this.props.targetSocket,
-        key,
-      });
+      // this.props.socket.emit('updateScore', {
+      //   targetSocket: this.props.match.params.id,
+      //   key,
+      // });
     }
 
   }

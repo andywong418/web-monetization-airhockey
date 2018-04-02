@@ -46,6 +46,7 @@ io.on('connection', socket => {
   })
   socket.on('updateScore', data => {
     const {targetSocket, key} = data;
+    console.log("targetSocket", key, targetSocket);
     socket.broadcast.to(targetSocket).emit('updateScore', key);
   })
   socket.on('payWinner', async winner => {

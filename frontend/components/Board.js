@@ -12,21 +12,21 @@ class Board extends React.Component {
     console.log(props.challenger);
     // Height should be set to be at least 400px
     // Width should be 70% of board.
-    const leftOffset = w * 0.15;
-    const rightOffset = w * 0.15;
+    const leftOffset = (w-1000) / 2;
+    const rightOffset = (w-1000) / 2;
     this.state = {
       leftOffset,
       rightOffset,
-      boardWidth: w * 0.7,
+      boardWidth: 1000,
       player1X: 5,
       player1Y: 200,
       player1downX: 5,
       player1downY: 200,
-      player2X: (w*0.7) - 50,
+      player2X: 1000 - 50,
       player2Y: 200,
-      player2downX: (w*0.7) - 20,
+      player2downX: 1000 - 20,
       player2downY: 200,
-      ballX: (w*0.7*0.5),
+      ballX: 500,
       ballY: 200,
     };
     this.changeCoord = this.changeCoord.bind(this);
@@ -43,7 +43,7 @@ class Board extends React.Component {
         [key]: newCoord
       });
     }
-    if((this.props.challenger && (key === 'player1X' || key === 'player1Y')) || (!this.props.challenger && (key === 'player2X' || key === 'player2Y')) || (this.props.challenger && key === 'ballX') || (this.props.challenger && key === 'ballY') ) {
+    if((this.props.challenger && (key === 'player1X' || key === 'player1Y')) || (!this.props.challenger && (key === 'player2X' || key === 'player2Y')) ) {
       // Broadcast to other side. Need to broadcast ball position as well.
       this.props.socket.emit('updateOtherPlayerCoords', {
         targetSocket: this.props.targetSocket,
@@ -56,13 +56,13 @@ class Board extends React.Component {
   resetBoard() {
     if(this.refs.boardRef) {
       this.setState({
-        ballX: (this.state.boardWidth*0.7*0.5),
+        ballX: (this.state.boardWidth * 0.5),
         ballY: 200,
       });
       this.props.socket.emit('updateOtherPlayerCoords', {
         targetSocket: this.props.targetSocket,
         key: 'ballX',
-        newCoord: (this.state.boardWidth*0.7*0.5),
+        newCoord: (this.state.boardWidth*0.5),
       });
       this.props.socket.emit('updateOtherPlayerCoords', {
         targetSocket: this.props.targetSocket,

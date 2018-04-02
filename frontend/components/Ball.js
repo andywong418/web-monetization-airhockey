@@ -50,20 +50,19 @@ class Ball extends React.Component {
         if(this.props.challenger) {
           this.props.changeCoord('ballX', this.props.x + this.state.velocityX);
           this.props.changeCoord('ballY', this.props.y + this.state.velocityY);
-          if(this.props.x + this.state.velocityX < 0) {
-            //Player 2 gets a point
-            this.props.updateScore('player2Score');
-            this.props.resetBoard();
-          }
-          if(this.props.x + this.state.velocityX > this.props.boardWidth - 10) {
-            this.props.updateScore('player1Score');
-            this.props.resetBoard();
-          }
         }
-
+        if(this.props.x + this.state.velocityX < 0) {
+          //Player 2 gets a point
+          this.props.updateScore('player2Score');
+          this.props.resetBoard();
+        }
+        if(this.props.x + this.state.velocityX > this.props.boardWidth - 10) {
+          this.props.updateScore('player1Score');
+          this.props.resetBoard();
+        }
       }
 
-    }, 80)
+    }, 60)
   }
 
 
