@@ -27,7 +27,6 @@ class Ball extends React.Component {
     //Update position according to the velocity every second
     setInterval(() => {
       // Reconciliate ball position every 100 ms
-      console.log("sync");
       this.props.syncBallCoord(this.props.x, this.props.y);
     }, 100);
     setInterval(() => {
