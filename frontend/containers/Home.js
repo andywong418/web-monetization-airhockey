@@ -2,6 +2,7 @@ import Proptypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
+import OnlineUsers from '../components/OnlineUsers';
 import axios from 'axios';
 
 function u8tohex (arr) {
@@ -43,7 +44,9 @@ class Home extends React.Component {
     this.state= {
       onlineUsers: [],
       roomName: 'airHockey',
-      challenges: []
+      challenges: [],
+      username: null,
+      paymentPointer: null,
     }
   }
 
@@ -83,31 +86,20 @@ class Home extends React.Component {
             <p className="lead text-muted turn"> Turn on your extensions and play with a someone who's online!</p>
 
         <div>
-        <h3> Online Players: </h3>
-        </div>
-        {this.state.onlineUsers.map(user => {
-          return (
-            <div key={user}>
-              <span>{user}</span> <Link to={"/gameOn/" + user + '/challenger'}> Challenge Player! </Link>
-            </div>
-          )
-        })}
-        {this.state.challenges.length > 0  ?
-          <div style= {{marginTop: '30px'}}>
-            <h3> Challenges: </h3>
-            {this.state.challenges.map(user => {
-              return (
-                <div key={user}>
-                  <span>You've been challenged by user {user}!</span>
-                  <Link to={"/gameOn/" + user + '/challenged'}> Accept </Link>
-                </div>
-              )
-            })}
-
+        <form className="col-sm-4 offset-sm-4">
+          <div className="form-group">
+            <label> Username: </label>
+            <input className="form-control" placeholder="Enter your username" />
           </div>
-          :
-          null
-        }
+          <div className="form-group">
+            <label> Payment Pointer: </label>
+            <input className="form-control" placeholder="Enter your payment pointer" />
+          </div>
+        </form>
+        </div>
+        {this.state.paymentPointer ? <OnlineUsers onlineUsers={this.state.onlineUsers} challenges={this.state.challenges} /> : <p> Please enter your payment pointer to access online players </p>}
+
+
       </div>
     );
   }

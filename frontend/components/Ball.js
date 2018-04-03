@@ -18,8 +18,8 @@ class Ball extends React.Component {
       initialYVelocity = -10;
     }
     this.state = {
-      velocityX: -10,
-      velocityY: -10,
+      velocityX: -20,
+      velocityY: -20,
     }
   }
 
@@ -49,7 +49,7 @@ class Ball extends React.Component {
         }
         this.props.changeCoord('ballX', this.props.x + this.state.velocityX);
         this.props.changeCoord('ballY', this.props.y + this.state.velocityY);
-      
+
         if(this.props.x + this.state.velocityX < 0) {
           //Player 2 gets a point
           this.props.updateScore('player2Score');
@@ -61,7 +61,7 @@ class Ball extends React.Component {
         }
       }
 
-    }, 60)
+    }, 80)
   }
 
 
