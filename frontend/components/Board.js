@@ -36,6 +36,13 @@ class Board extends React.Component {
     this.props.socket.on('updateOtherPlayerCoords', data => {
       this.changeCoord(data.key, data.newCoord);
     })
+    this.props.socket.on('syncBallCoord', data => {
+      console.log("syncing?", data);
+      this.setState({
+        ballX: data.x,
+        ballY: data.y
+      });
+    })
     // console.log("this.props", this.props);
     // this.props.socket.emit('updateBoardSize', {
     //   targetSocket: this.props.targetSocket,
@@ -61,12 +68,22 @@ class Board extends React.Component {
     }
     const broadcastCondition = direction === 'player1' ? this.props.challenger : !this.props.challenger;
     console.log("broadcastCondition", broadcastCondition, direction);
-    if((this.props.challenger && (key === 'player1X' || key === 'player1Y')) || (!this.props.challenger && (key === 'player2X' || key === 'player2Y')) || (broadcastCondition && (key==='ballX')) || (broadcastCondition && (key==='ballY')) ) {
+    if((this.props.challenger && (key === 'player1X' || key === 'player1Y')) || (!this.props.challenger && (key === 'player2X' || key === 'player2Y')) ) {
       // Broadcast to other side. Need to broadcast ball position as well.
       this.props.socket.emit('updateOtherPlayerCoords', {
         targetSocket: this.props.targetSocket,
         key,
         newCoord
+      })
+    }
+  }
+
+  syncBallCoord(x, y) {
+    if(this.props.challenger) {
+      this.props.socket.emit('syncBallCoord', {
+        targetSocket,
+        x,
+        y,
       })
     }
   }
@@ -123,7 +140,7 @@ class Board extends React.Component {
           leftOffset = {this.state.leftOffset}
           x = {this.state.ballX}
           y = {this.state.ballY}
-          changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
+          changeCoord = {(key, newCoord, direction) => this.changeCoord(key, newCoord, direction)}
           updateScore = {(key) => this.props.updateScore(key)}
           resetBoard = {() => this.resetBoard()}
           challenger = {this.props.challenger}

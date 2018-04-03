@@ -25,7 +25,10 @@ class Ball extends React.Component {
 
   componentDidMount() {
     //Update position according to the velocity every second
-
+    setInterval(() => {
+      // Reconciliate ball position every 100 ms
+      this.props.syncBallCoord(this.props.x, this.props.y);
+    }, 100);
     setInterval(() => {
       if(this.refs.ballRef) {
         const currX = this.props.x;
@@ -48,7 +51,7 @@ class Ball extends React.Component {
           this.setState({ velocityX: -this.state.velocityX, velocityY: -this.state.velocityY });
         }
         const direction = this.state.velocityX < 0 ? 'player1' : 'player2';
-        console.log("direction", direction);
+        console.log("direction", direction, this.state.velocityX);
         this.props.changeCoord('ballX', this.props.x + this.state.velocityX, direction);
         this.props.changeCoord('ballY', this.props.y + this.state.velocityY, direction);
 
