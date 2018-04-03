@@ -18,8 +18,8 @@ class Ball extends React.Component {
       initialYVelocity = -10;
     }
     this.state = {
-      velocityX: -30,
-      velocityY: -30,
+      velocityX: -15,
+      velocityY: -15,
     }
   }
 
@@ -61,7 +61,7 @@ class Ball extends React.Component {
         }
       }
 
-    }, 100)
+    }, 50)
   }
 
 
