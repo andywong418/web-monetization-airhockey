@@ -55,13 +55,6 @@ io.on('connection', socket => {
     });
   })
 
-  socket.on('syncBallCoord', data => {
-    const {x, y, targetSocket} = data;
-    socket.broadcast.to(targetSocket).emit('syncBallCoord', {
-      x,
-      y,
-    })
-  })
   socket.on('updateBoardSize', data => {
     const {targetSocket, leftOffset, boardWidth} = data;
     socket.broadcast.to(targetSocket).emit('updateBoardSize', {

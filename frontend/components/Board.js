@@ -36,17 +36,7 @@ class Board extends React.Component {
     this.props.socket.on('updateOtherPlayerCoords', data => {
       this.changeCoord(data.key, data.newCoord);
     })
-    setInterval(() => {
-      // Reconciliate ball position every 100 ms
-      this.syncBallCoord(this.state.ballX, this.state.ballY);
-    }, 500);
 
-    this.props.socket.on('syncBallCoord', data => {
-      this.setState({
-        ballX: data.x,
-        ballY: data.y,
-      })
-    })
     // console.log("this.props", this.props);
     // this.props.socket.emit('updateBoardSize', {
     //   targetSocket: this.props.targetSocket,
@@ -146,7 +136,6 @@ class Board extends React.Component {
           updateScore = {(key) => this.props.updateScore(key)}
           resetBoard = {() => this.resetBoard()}
           challenger = {this.props.challenger}
-          syncBallCoord = {(x, y) => this.syncBallCoord(x, y)}
         />
         <Player
           boardWidth = {this.state.boardWidth}
