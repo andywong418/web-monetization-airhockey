@@ -12,6 +12,8 @@ class Game extends React.Component {
       startGame: false,
       challenger,
       paymentReceived: false,
+      player1Pointer: '',
+      player2Pointer: '',
     }
   }
 
@@ -32,17 +34,44 @@ class Game extends React.Component {
       // Site is paid with deposit.
       this.setState({ startGame: true });
     }
+    // Send payment pointers to each other
+
     const targetSocket = this.props.match.params.id;
-    this.props.socket.emit('challengePlayer', targetSocket);
-    if(!this.state.challenger) {
-      this.props.socket.emit('challengeAccepted', targetSocket)
+
+    this.props.socket.emit('sendPaymentPointer', {
+      targetSocket,
+      paymentPointer: this.props.paymentPointer
+    });
+
+    this.props.socket.on('sendPaymentPointer', paymentPointer => {
+      const player1Pointer = this.state.challenger ? this.props.paymentPointer : paymentPointer;
+      const player2Pointer = this.state.challenger ? paymentPointer : this.props.paymentPointer;
+      this.setState({
+        player1Pointer,
+        player2Pointer,
+      });
+    });
+
+    if(this.state.challenger) {
+      this.props.socket.emit('challengePlayer', {
+        targetSocket,
+        username: this.props.username,
+      });
     }
+
+    if(!this.state.challenger) {
+      this.props.socket.emit('challengeAccepted', {
+        targetSocket,
+        username: this.props.username,
+      });
+    }
+
     this.props.socket.on('challengeAccepted', () => {
       if(paymentReceived.paid) {
         this.setState({ startGame: true });
       }
       // Throw error message for no payment received.
-    })
+    });
 
   }
 
@@ -50,9 +79,12 @@ class Game extends React.Component {
     if(this.refs.gameRef) {
       if(this.state[key] + 1 === 3) {
         const winner = key === 'player1Score' ? 'Player 1' : 'Player 2';
-        const winnerPaymentPointer = key === 'player1Score' ? 'player1' : 'player2';
+        const winnerPaymentPointer = key === 'player1Score' ? this.state.player1Pointer : this.state.player2Pointer;
         this.setState({ winner, startGame: false });
-        this.props.socket.emit('payWinner', winnerPaymentPointer);
+        //only send once
+        if(this.state.challenger) {
+          this.props.socket.emit('payWinner', winnerPaymentPointer);
+        }
       }
       this.setState({
         [key]: this.state[key] + 1
@@ -86,7 +118,9 @@ class Game extends React.Component {
 const mapStateToProps = (state) => {
     return {
         name: state.rootReducer.name,
-        socket: state.rootReducer.socket
+        socket: state.rootReducer.socket,
+        username: state.rootReducer.username,
+        paymentPointer: state.rootReducer.paymentPointer,
     };
 };
 

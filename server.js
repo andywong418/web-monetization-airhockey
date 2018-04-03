@@ -16,24 +16,34 @@ app.get('*', (request, response) => {
 const games = {};
 const onlineUsers = {}
 io.on('connection', socket => {
-  onlineUsers[socket.id] = true;
-  socket.broadcast.emit('newEntrant', socket.id);
   socket.on('sendUsers', requestedRoom => {
     const userList = [];
     for(let key in onlineUsers) {
       if(key !== socket.id) {
-        console.log(key);
-        userList.push(key);
+        userList.push({socket: key, username: onlineUsers[key]});
       }
     }
     socket.emit('getUsers', userList);
   });
 
-  socket.on('challengePlayer', targetSocket => {
-    socket.broadcast.to(targetSocket).emit('challengePlayer', socket.id);
+  socket.on('sendUsername', username => {
+    onlineUsers[socket.id] = username;
+    socket.broadcast.emit('newEntrant', {
+      socket: socket.id,
+      username
+    })
+  })
+  socket.on('challengePlayer', data => {
+
+    const {targetSocket, username} = data;
+    socket.broadcast.to(targetSocket).emit('challengePlayer', {
+      targetSocket: socket.id,
+      username: username
+    });
   })
 
-  socket.on('challengePlayer', targetSocket => {
+  socket.on('challengeAccepted', data => {
+    const { targetSocket, username } = data;
     socket.broadcast.to(targetSocket).emit('challengeAccepted');
   })
 
@@ -51,13 +61,20 @@ io.on('connection', socket => {
       boardWidth,
     })
   })
+
+  socket.on('sendPaymentPointer', data => {
+    const {targetSocket, paymentPointer} = data;
+    console.log("paymentPointer SENT?", targetSocket, paymentPointer);
+    socket.broadcast.to(targetSocket).emit('sendPaymentPointer', paymentPointer)
+  })
+
   socket.on('payWinner', async winner => {
     // SPSP end point to pay winner?
     console.log('connecting plugin');
     await plugin.connect();
-    console.log('sending payment');
+    console.log('sending payment to ' + winner );
     await SPSP.pay(plugin, {
-      receiver: '$' + winner + '.localtunnel.me',
+      receiver: '$' + winner,
       sourceAmount: '200'
     });
     console.log("paid");

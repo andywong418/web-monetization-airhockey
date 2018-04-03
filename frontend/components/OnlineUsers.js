@@ -7,22 +7,31 @@ const OnlineUsers = ({onlineUsers, challenges}) => {
     <div>
     <h3> Online Players: </h3>
     {onlineUsers.map(user => {
-      return (
-        <div key={user}>
-          <span>{user}</span> <Link to={"/gameOn/" + user + '/challenger'}> Challenge Player! </Link>
-        </div>
-      )
+      console.log("user", user);
+      if(user.username) {
+        return (
+          <div key={user.username}>
+            <span>{user.username}</span> <Link to={"/gameOn/" + user.socket + '/challenger'}> Challenge Player! </Link>
+          </div>
+        )
+      }
+      return null;
     })}
     {challenges.length > 0  ?
       <div style= {{marginTop: '30px'}}>
         <h3> Challenges: </h3>
         {challenges.map(user => {
-          return (
-            <div key={user}>
-              <span>You've been challenged by user {user}!</span>
-              <Link to={"/gameOn/" + user + '/challenged'}> Accept </Link>
-            </div>
-          )
+          console.log("user", user);
+          if(user.username) {
+            return (
+              <div key={user.targetSocket}>
+                <span>You've been challenged by user {user.username}!</span>
+                <Link to={"/gameOn/" + user.targetSocket + '/challenged'}> Accept </Link>
+              </div>
+            )
+          }
+          return null;
+
         })}
 
       </div>

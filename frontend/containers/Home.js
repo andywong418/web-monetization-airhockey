@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
 import OnlineUsers from '../components/OnlineUsers';
 import axios from 'axios';
-
+import {updateUsername, updatePaymentPointer} from '../actions/index';
 function u8tohex (arr) {
   var vals = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' ]
   var ret = ''
@@ -45,8 +45,9 @@ class Home extends React.Component {
       onlineUsers: [],
       roomName: 'airHockey',
       challenges: [],
-      username: null,
-      paymentPointer: null,
+      username: '',
+      paymentPointer: '',
+      submitted: false,
     }
   }
 
@@ -69,13 +70,36 @@ class Home extends React.Component {
         challenges.push(challenger);
         this.setState({ challenges });
       });
-      this.props.socket.on('deleteUser', user => {
+      this.props.socket.on('deleteUser', userId => {
         let onlineUsers = this.state.onlineUsers.slice();
-        if(onlineUsers.indexOf(user) !== -1) {
-          onlineUsers.splice(onlineUsers.indexOf(user), 1);
-          this.setState({ onlineUsers });
+        let indexToRemove;
+        for(let i = 0; i < onlineUsers.length; i++) {
+          if(onlineUsers[i].socket === userId) {
+            indexToRemove = i;
+          }
         }
+        onlineUsers.splice(indexToRemove, 1);
+        this.setState({ onlineUsers});
       })
+  }
+  onUsernameChange(e) {
+    const target = e.target;
+    const value = target.value;
+    this.props.updateUsername(value);
+  }
+
+  onPaymentPointerChange(e) {
+    const target = e.target;
+    const value = target.value;
+    this.props.updatePaymentPointer(value);
+  }
+
+  handleFormSubmit(e) {
+    e.preventDefault();
+    this.setState({
+      submitted: true
+    })
+    this.props.socket.emit('sendUsername', this.props.username);
   }
 
   render() {
@@ -86,18 +110,19 @@ class Home extends React.Component {
             <p className="lead text-muted turn"> Turn on your extensions and play with a someone who's online!</p>
 
         <div>
-        <form className="col-sm-4 offset-sm-4">
+        <form className="col-sm-4 offset-sm-4" onSubmit={(e) => this.handleFormSubmit(e)}>
           <div className="form-group">
             <label> Username: </label>
-            <input className="form-control" placeholder="Enter your username" />
+            <input className="form-control" name="username" placeholder="Enter your username" onChange={(e) => this.onUsernameChange(e)} value={this.props.username} />
           </div>
           <div className="form-group">
             <label> Payment Pointer: </label>
-            <input className="form-control" placeholder="Enter your payment pointer" />
+            <input className="form-control" name="paymentPointer" placeholder="Enter your payment pointer" onChange={(e) => this.onPaymentPointerChange(e)} value={this.props.paymentPointer}/>
           </div>
+          <button type="submit" className="btn btn-primary">Submit</button>
         </form>
         </div>
-        {this.state.paymentPointer ? <OnlineUsers onlineUsers={this.state.onlineUsers} challenges={this.state.challenges} /> : <p> Please enter your payment pointer to access online players </p>}
+        {this.props.paymentPointer && this.state.submitted ? <OnlineUsers onlineUsers={this.state.onlineUsers} challenges={this.state.challenges} /> : <p> Please enter your payment pointer to access online players </p>}
 
 
       </div>
@@ -108,12 +133,16 @@ class Home extends React.Component {
 const mapStateToProps = (state) => {
     return {
         name: state.rootReducer.name,
-        socket: state.rootReducer.socket
+        socket: state.rootReducer.socket,
+        username: state.rootReducer.username,
+        paymentPointer: state.rootReducer.paymentPointer,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
+      updateUsername: (newUsername) => dispatch(updateUsername(newUsername)),
+      updatePaymentPointer: (newPaymentPointer) => dispatch(updatePaymentPointer(newPaymentPointer)),
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

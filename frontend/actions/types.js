@@ -1,1 +1,3 @@
 /* Action types */
+export const UPDATE_USERNAME = 'UPDATE_USERNAME';
+export const UPDATE_PAYMENT_POINTER = 'UPDATE_PAYMENT_POINTER';

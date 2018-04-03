@@ -44,7 +44,6 @@ class Board extends React.Component {
     })
     this.props.socket.on('updateBoardSize', data => {
       const { boardWidth, leftOffset} = data;
-      console.log("what is this?", data);
       if(boardWidth <= this.state.boardWidth) {
         this.setState({
           boardWidth,
