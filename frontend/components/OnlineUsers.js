@@ -4,7 +4,7 @@ import React from 'react';
 
 const OnlineUsers = ({onlineUsers, challenges}) => {
   return (
-    <div>
+    <div style= {{marginTop: '30px'}}>
     <h3> Online Players: </h3>
     {onlineUsers.map(user => {
       console.log("user", user);

@@ -97,7 +97,7 @@ class Game extends React.Component {
 
     return (
       <div className="text-center container" ref="gameRef">
-        <h1> Try to put the ball onto the other wall. First to 7 wins! </h1>
+        <h1> Try to put the ball onto the other wall. First to 3 wins! </h1>
         {this.state.challenger ? <p> You will be playing as Player 1 on your left side </p> : <p> You will be playing as player 2 on your right side </p>}
         {this.state.startGame ?
           <div>
