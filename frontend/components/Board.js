@@ -72,7 +72,7 @@ class Board extends React.Component {
   syncBallCoord(x, y) {
     if(this.props.challenger) {
       this.props.socket.emit('syncBallCoord', {
-        targetSocket,
+        targetSocket: this.props.targetSocket,
         x,
         y,
       })
