@@ -36,30 +36,32 @@ class Board extends React.Component {
     this.props.socket.on('updateOtherPlayerCoords', data => {
       this.changeCoord(data.key, data.newCoord);
     })
-    console.log("this.props", this.props);
-    this.props.socket.emit('updateBoardSize', {
-      targetSocket: this.props.targetSocket,
-      leftOffset: this.state.leftOffset,
-      boardWidth: this.state.boardWidth,
-    })
-    this.props.socket.on('updateBoardSize', data => {
-      const { boardWidth, leftOffset} = data;
-      if(boardWidth <= this.state.boardWidth) {
-        this.setState({
-          boardWidth,
-          leftOffset
-        })
-      }
-
-    })
+    // console.log("this.props", this.props);
+    // this.props.socket.emit('updateBoardSize', {
+    //   targetSocket: this.props.targetSocket,
+    //   leftOffset: this.state.leftOffset,
+    //   boardWidth: this.state.boardWidth,
+    // })
+    // this.props.socket.on('updateBoardSize', data => {
+    //   const { boardWidth, leftOffset} = data;
+    //   if(boardWidth <= this.state.boardWidth) {
+    //     this.setState({
+    //       boardWidth,
+    //       leftOffset
+    //     })
+    //   }
+    //
+    // })
   }
-  changeCoord(key, newCoord) {
+  changeCoord(key, newCoord, direction) {
     if(this.refs.boardRef) {
       this.setState({
         [key]: newCoord
       });
     }
-    if((this.props.challenger && (key === 'player1X' || key === 'player1Y')) || (!this.props.challenger && (key === 'player2X' || key === 'player2Y')) || (this.props.challenger && key === 'ballX') || (this.props.challenger && key === 'ballY')  ) {
+    const broadcastCondition = direction === 'player1' ? this.props.challenger : !this.props.challenger;
+    console.log("broadcastCondition", broadcastCondition);
+    if((this.props.challenger && (key === 'player1X' || key === 'player1Y')) || (!this.props.challenger && (key === 'player2X' || key === 'player2Y')) || (broadcastCondition && (key==='ballX')) || (broadcastCondition && (key==='ballY')) ) {
       // Broadcast to other side. Need to broadcast ball position as well.
       this.props.socket.emit('updateOtherPlayerCoords', {
         targetSocket: this.props.targetSocket,
