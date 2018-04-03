@@ -60,7 +60,7 @@ class Board extends React.Component {
       });
     }
     const broadcastCondition = direction === 'player1' ? this.props.challenger : !this.props.challenger;
-    console.log("broadcastCondition", broadcastCondition);
+    console.log("broadcastCondition", broadcastCondition, direction);
     if((this.props.challenger && (key === 'player1X' || key === 'player1Y')) || (!this.props.challenger && (key === 'player2X' || key === 'player2Y')) || (broadcastCondition && (key==='ballX')) || (broadcastCondition && (key==='ballY')) ) {
       // Broadcast to other side. Need to broadcast ball position as well.
       this.props.socket.emit('updateOtherPlayerCoords', {
