@@ -121,7 +121,6 @@ class Board extends React.Component {
           changeCoord = {(key, newCoord) => this.changeCoord(key, newCoord)}
           player = 'player1'
           challenger = {this.props.challenger}
-          syncBallCoord = {(x, y) => this.syncBallCoord(x, y)}
         />
         <Ball
           player1X = {this.state.player1X}
@@ -136,6 +135,7 @@ class Board extends React.Component {
           updateScore = {(key) => this.props.updateScore(key)}
           resetBoard = {() => this.resetBoard()}
           challenger = {this.props.challenger}
+          syncBallCoord = {(x, y) => this.syncBallCoord(x, y)}
         />
         <Player
           boardWidth = {this.state.boardWidth}
