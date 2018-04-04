@@ -43,7 +43,6 @@
     var domain = new URL(window.location).origin
     getMonetizationId(domain + '/api/pay/:id')
       .then(id => {
-        console.log("HUH", id);
         window.monetizationId = id
       })
     </script>

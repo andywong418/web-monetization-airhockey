@@ -80,6 +80,11 @@ io.on('connection', socket => {
     });
     console.log("paid");
   })
+
+  socket.on('removePlayerFromOnlineList', () => {
+    socket.broadcast.emit('deleteUser', socket.id);
+    delete onlineUsers[socket.id];
+  })
   socket.on('disconnect', () => {
     socket.broadcast.emit('deleteUser', socket.id);
     delete onlineUsers[socket.id];

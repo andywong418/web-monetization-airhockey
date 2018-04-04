@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
 import OnlineUsers from '../components/OnlineUsers';
+import Footer from '../components/Footer';
 import axios from 'axios';
 import {updateUsername, updatePaymentPointer} from '../actions/index';
 function u8tohex (arr) {
@@ -45,8 +46,6 @@ class Home extends React.Component {
       onlineUsers: [],
       roomName: 'airHockey',
       challenges: [],
-      username: '',
-      paymentPointer: '',
       submitted: false,
     }
   }
@@ -103,28 +102,37 @@ class Home extends React.Component {
   }
 
   render() {
+
     return (
-      <div className="text-center container">
-            <h1 className="jumbotron-heading">Air Hockey - developing games that utilise web monetization to pay off players. </h1>
+      <div className="text-center">
+            <h1 className="jumbotron-heading" style={{background: '#f57b19', color: 'white'}}><img src="http://cashbox.com.au/wp-content/uploads/2014/09/air-hockey-icon.png" width = {200}/> Air Hockey Demo </h1>
             <p className="lead text-muted showoff">This is a demo site to show off the capabilities of <a href="https://github.com/interledger/rfcs/blob/master/0028-web-monetization/0028-web-monetization.md">Web Monetization</a> and <a href="https://interledger.org">Interledger</a>.</p>
             <p className="lead text-muted turn"> Turn on your extensions and play with a someone who's online!</p>
 
         <div>
-        <form className="col-sm-4 offset-sm-4" onSubmit={(e) => this.handleFormSubmit(e)}>
-          <div className="form-group">
-            <label> Username: </label>
-            <input className="form-control" name="username" placeholder="Enter your username" onChange={(e) => this.onUsernameChange(e)} value={this.props.username} />
+        {this.props.paymentPointer && this.state.submitted ?
+          <div>
+            <p> Username: <span style={{color: 'blue'}}>{this.props.username} </span></p>
+            <p > Payment Pointer: <span style={{color: 'blue'}}> {this.props.paymentPointer}</span></p>
           </div>
-          <div className="form-group">
-            <label> Payment Pointer: </label>
-            <input className="form-control" name="paymentPointer" placeholder="Enter your payment pointer" onChange={(e) => this.onPaymentPointerChange(e)} value={this.props.paymentPointer}/>
-          </div>
-          <button type="submit" className="btn btn-primary">Submit</button>
-        </form>
+          :
+          <form className="col-sm-4 offset-sm-4" onSubmit={(e) => this.handleFormSubmit(e)}>
+            <div className="form-group">
+              <label> Username: </label>
+              <input className="form-control" name="username" placeholder="Enter your username" onChange={(e) => this.onUsernameChange(e)} value={this.props.username} />
+            </div>
+            <div className="form-group">
+              <label> Payment Pointer: </label>
+              <input className="form-control" name="paymentPointer" placeholder="Enter your payment pointer" onChange={(e) => this.onPaymentPointerChange(e)} value={this.props.paymentPointer}/>
+            </div>
+            <button type="submit" className="btn btn-primary">Submit</button>
+          </form>
+        }
+
         </div>
         {this.props.paymentPointer && this.state.submitted ? <OnlineUsers onlineUsers={this.state.onlineUsers} challenges={this.state.challenges} /> : <p> Please enter your payment pointer to access online players </p>}
 
-
+        <Footer />
       </div>
     );
   }

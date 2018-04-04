@@ -36,7 +36,9 @@ class Board extends React.Component {
     this.props.socket.on('updateOtherPlayerCoords', data => {
       this.changeCoord(data.key, data.newCoord);
     })
-
+    // Scroll to board.
+    const boardScrollTop = this.refs.boardRef.scrollTop;
+    window.scrollTo(0, 50);
     // console.log("this.props", this.props);
     // this.props.socket.emit('updateBoardSize', {
     //   targetSocket: this.props.targetSocket,
@@ -104,9 +106,9 @@ class Board extends React.Component {
 
   render() {
     const boardCss = {
-      position: 'fixed',
+      position: 'relative',
       minHeight: '400px',
-      border: '2px solid black'
+      border: '2px solid black',
     };
     boardCss.width = this.state.boardWidth;
     boardCss.left = this.state.leftOffset;

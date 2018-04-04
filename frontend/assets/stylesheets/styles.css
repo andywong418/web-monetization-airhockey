@@ -21,6 +21,51 @@
   padding-left: 5px;
 }
 
+.player1Display, .player2Display, .player1Score, .player2Score {
+  font-size: 25px;
+}
+
+.player1Display, .player2Display {
+  color: grey;
+  margin-right: 5px;
+}
+
+.player1Score {
+  color: #2574a7;
+  margin-right: 100px;
+}
+.player2Score {
+  color: #17bc9a;
+}
+.linkBackHome, .linkBackHome:hover {
+  color: white
+}
+
+footer {
+  display: flex;
+  height: 200px;
+  background: #f57b19;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  margin-top: 200px;
+  position: absolute;
+  width: 100%;
+}
+
+.link-container {
+  display: flex;
+}
+.link-container p a{
+  margin-left: 10px;
+  color: white;
+}
+
+footer p a:hover {
+  color: white;
+}
+
 .footer-wrapper {
   width: 100%;
 

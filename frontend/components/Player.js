@@ -62,7 +62,7 @@ class Player extends React.Component {
       boxSizing: 'border-box',
       borderRadius: '50%'
     };
-
+    stickCss.borderColor = this.props.player === 'player1' ? '#2574A9' : '#1BBC9B';
     return (
       <div style = {stickCss}
       onMouseDown = {e => this.dragMouseDown(e)}

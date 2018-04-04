@@ -1,6 +1,9 @@
 import React from 'react';
 import Board from '../components/Board';
+import Footer from '../components/Footer';
 import { connect } from 'react-redux';
+import {Link} from 'react-router-dom';
+import '../assets/stylesheets/styles.css';
 class Game extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +35,9 @@ class Game extends React.Component {
     // const startGame = this.state.challenger ? false: true;
     if(paymentReceived.paid && !this.state.challenger) {
       // Site is paid with deposit.
-      this.setState({ startGame: true });
+      this.setState({ startGame: true }, () => {
+        this.props.socket.emit('removePlayerFromOnlineList');
+      });
     }
     // Send payment pointers to each other
 
@@ -42,7 +47,6 @@ class Game extends React.Component {
       targetSocket,
       paymentPointer: this.props.paymentPointer
     });
-
     this.props.socket.on('sendPaymentPointer', paymentPointer => {
       const player1Pointer = this.state.challenger ? this.props.paymentPointer : paymentPointer;
       const player2Pointer = this.state.challenger ? paymentPointer : this.props.paymentPointer;
@@ -96,12 +100,15 @@ class Game extends React.Component {
   render() {
 
     return (
-      <div className="text-center container" ref="gameRef">
-        <h1> Try to put the ball onto the other wall. First to 3 wins! </h1>
-        {this.state.challenger ? <p> You will be playing as Player 1 on your left side </p> : <p> You will be playing as player 2 on your right side </p>}
+      <div className="text-center" ref="gameRef">
+        <h1 className="jumbotron" style={{background: '#f57b19', color: 'white', position: 'relative'}}> Try to put the ball onto the other wall. First to 3 wins!
+          <div style={{fontSize: '20px', position: 'absolute', margin: '10px auto', width: '100%'}}><Link className="linkBackHome" to={'/'}>Go back to Home</Link></div>
+        </h1>
+        {this.state.challenger ? <p className="lead showoff"> You will be playing as Player 1 on your left side with the <i className="fas fa-circle" style = {{ color: '#2574A9' }}></i> stick </p> : <p className="lead showoff"> You will be playing as player 2 on your right side with the <i className="fas fa-circle" style = {{ color: '#1BBC9B' }}></i> stick </p>}
         {this.state.startGame ?
           <div>
-            <p> Player1: {this.state.player1Score}, Player2: {this.state.player2Score} </p>
+            <span className="player1Display"> Player1: </span><span className="player1Score"> {this.state.player1Score} </span>
+            <span className="player2Display"> Player2: </span><span className="player2Score"> {this.state.player2Score} </span>
             <Board winner={this.state.winner}
               challenger={this.state.challenger}
               socket = {this.props.socket}
@@ -111,6 +118,7 @@ class Game extends React.Component {
           </div>
           :
           <p> {this.state.winner ? this.state.winner + ' has won the game and will take the prize money!' : "Waiting for other player..."}</p>}
+          <Footer />
       </div>
     )
   }
