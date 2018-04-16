@@ -56,32 +56,33 @@ class Board extends React.Component {
   }
 
   componentDidMount() {
-    this.props.socket.on('updateOtherPlayerCoords', data => {
-      this.changeCoord(data.key, data.newCoord);
-    })
+    if(this.refs.boardRef) {
+      this.props.socket.on('updateOtherPlayerCoords', data => {
+        this.changeCoord(data.key, data.newCoord);
+      })
 
-    this.props.socket.on('updateBallPos', data => {
-      this.setState({ballX: data.ballX, ballY: data.ballY});
-      console.log("dataX?", data.ballX);
-      if(data.ballX < 0) {
-        //Player 2 gets a point
-        this.props.updateScore('player2Score');
-        this.resetBoard();
-      }
-      if(data.ballX > this.state.boardWidth - 10) {
-        this.props.updateScore('player1Score');
-        this.resetBoard();
-      }
-    })
-    // Scroll to board.
-    const boardScrollTop = this.refs.boardRef.scrollTop;
-    window.scrollTo(0, 50);
+      this.props.socket.on('updateBallPos', data => {
+        this.setState({ballX: data.ballX, ballY: data.ballY});
+        if(data.ballX < 0) {
+          //Player 2 gets a point
+          this.props.updateScore('player2Score');
+          this.resetBoard();
+        }
+        if(data.ballX > this.state.boardWidth - 10) {
+          this.props.updateScore('player1Score');
+          this.resetBoard();
+        }
+      })
+      // Scroll to board.
+      const boardScrollTop = this.refs.boardRef.scrollTop;
+      window.scrollTo(0, 50);
 
-    setInterval(() => {
-      this.props.socket.emit('updateBallPos', {
-        gameId: this.state.gameId
-      });
-    }, 50)
+      setInterval(() => {
+        this.props.socket.emit('updateBallPos', {
+          gameId: this.state.gameId
+        });
+      }, 50)
+    }
   }
   changeCoord(key, newCoord, direction) {
       this.setState({
