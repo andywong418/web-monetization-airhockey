@@ -13,114 +13,98 @@ class Board extends React.Component {
     // Height should be set to be at least 400px
     // Width should be 70% of board.
     // Ping server for ball update.
+    const leftOffset = w * 0.15;
+    const rightOffset = w * 0.15;
     this.state = {
-      leftOffset: 128,
-      rightOffset: 128,
-      boardWidth: 1000,
+      leftOffset,
+      rightOffset,
+      boardWidth: w * 0.7,
       player1X: 5,
       player1Y: 200,
       player1downX: 5,
       player1downY: 200,
-      player2X: 1000 - 50,
+      player2X: (w*0.7) - 50,
       player2Y: 200,
-      player2downX: 1000 - 20,
+      player2downX: (w*0.7) - 50,
       player2downY: 200,
-
+      gameId: '',
+      ballX: (w*0.7) / 2,
+      ballY: 200,
     };
     this.changeCoord = this.changeCoord.bind(this);
+    //Start game.
+    const gameStartObj = {
+      ballX: this.state.boardWidth / 2,
+      ballY: 200,
+      boardWidth: this.state.boardWidth
+    };
+
+    if(this.props.challenger) {
+      // Send player1 starting coord
+      gameStartObj.player1X = this.state.player1X;
+      gameStartObj.player1Y = this.state.player1Y;
+      gameStartObj.player = 'player1';
+      gameStartObj.gameId = this.props.socket.id + '-' + this.props.targetSocket;
+    } else {
+      gameStartObj.player2X = this.state.player2X;
+      gameStartObj.player2Y = this.state.player2Y;
+      gameStartObj.player = 'player2';
+      gameStartObj.gameId = this.props.targetSocket + '-' + this.props.socket.id;
+    }
+    this.state.gameId = gameStartObj.gameId;
+    this.props.socket.emit('gameStart', gameStartObj);
   }
 
   componentDidMount() {
     this.props.socket.on('updateOtherPlayerCoords', data => {
-      console.log("updating kind of slow");
       this.changeCoord(data.key, data.newCoord);
+    })
+
+    this.props.socket.on('updateBallPos', data => {
+      this.setState({ballX: data.ballX, ballY: data.ballY});
+      console.log("dataX?", data.ballX);
+      if(data.ballX < 0) {
+        //Player 2 gets a point
+        this.props.updateScore('player2Score');
+        this.resetBoard();
+      }
+      if(data.ballX > this.state.boardWidth - 10) {
+        this.props.updateScore('player1Score');
+        this.resetBoard();
+      }
     })
     // Scroll to board.
     const boardScrollTop = this.refs.boardRef.scrollTop;
     window.scrollTo(0, 50);
 
     setInterval(() => {
-        const currX = this.props.x;
-        const currY = this.props.y;
-        if((this.state.ballX + this.state.ballXVelocity >= this.state.boardWidth - 5 || this.state.ballX <= 5)) {
-          this.setState({ ballXVelocity: -this.state.ballXVelocity });
-        }
-        if(this.state.ballY + this.state.ballYVelocity >= 390 || this.state.ballY <= 5) {
-          this.setState({ ballYVelocity: -this.state.ballYVelocity });
-        }
-
-        const player1XDiff = this.state.ballX - this.state.player1X + this.state.ballXVelocity;
-        const player1YDiff = this.state.ballY - this.state.player1Y + this.state.ballYVelocity;
-        const player2XDiff = this.state.ballX - this.state.player2X + this.state.ballXVelocity;
-        const player2YDiff = this.state.ballY - this.state.player2Y + this.state.ballYVelocity;
-        const player1Distance = Math.sqrt((player1XDiff * player1XDiff) + (player1YDiff * player1YDiff));
-        const player2Distance = Math.sqrt((player2XDiff * player2XDiff) + (player2YDiff * player2YDiff));
-        // 30 is the radius of the 'hockey stick' and the ball
-        if(player1Distance <= 30 || player2Distance <= 30) {
-          this.setState({ ballXVelocity: -this.state.ballXVelocity, ballYVelocity: -this.state.ballYVelocity });
-        }
-        const direction = this.state.ballXVelocity < 0 ? 'player1' : 'player2';
-        if(this.props.challenger) {
-          this.changeCoord('ballX', this.state.ballX + this.state.ballXVelocity, direction);
-          this.changeCoord('ballY', this.state.ballY + this.state.ballYVelocity, direction);
-        }
-
-
-        if(this.props.x + this.state.velocityX < 0) {
-          //Player 2 gets a point
-          this.updateScore('player2Score');
-          this.resetBoard();
-        }
-        if(this.props.x + this.state.velocityX > this.props.boardWidth - 10) {
-          this.updateScore('player1Score');
-          this.resetBoard();
-        }
-
-
+      this.props.socket.emit('updateBallPos', {
+        gameId: this.state.gameId
+      });
     }, 50)
   }
   changeCoord(key, newCoord, direction) {
       this.setState({
         [key]: newCoord
       });
-    if((this.props.challenger && (key === 'player1X' || key === 'player1Y')) || (!this.props.challenger && (key === 'player2X' || key === 'player2Y')) || this.props.challenger && (key === 'ballX' || key === 'ballY' )) {
+    if((this.props.challenger && (key === 'player1X' || key === 'player1Y')) || (!this.props.challenger && (key === 'player2X' || key === 'player2Y')) ) {
       // Broadcast to other side. Need to broadcast ball position as well.
+
       this.props.socket.emit('updateOtherPlayerCoords', {
         targetSocket: this.props.targetSocket,
         key,
-        newCoord
+        newCoord,
+        gameId: this.state.gameId
       })
     }
   }
 
-  syncBallCoord(x, y) {
-    if(this.props.challenger) {
-      this.props.socket.emit('syncBallCoord', {
-        targetSocket: this.props.targetSocket,
-        x,
-        y,
-      })
-    }
-  }
 
   resetBoard() {
     if(this.refs.boardRef) {
-      this.setState({
-        ballX: (this.state.boardWidth * 0.5),
-        ballY: 200,
-      });
-      if(this.props.challenger) {
-        this.props.socket.emit('updateOtherPlayerCoords', {
-          targetSocket: this.props.targetSocket,
-          key: 'ballX',
-          newCoord: (this.state.boardWidth*0.5),
-        });
-        this.props.socket.emit('updateOtherPlayerCoords', {
-          targetSocket: this.props.targetSocket,
-          key: 'ballY',
-          newCoord: 200,
-        })
-      }
+      this.props.socket.emit('resetBoard', {
+        gameId: this.state.gameId
+      })
 
     }
   }
@@ -147,17 +131,10 @@ class Board extends React.Component {
           challenger = {this.props.challenger}
         />
         <Ball
-          player1X = {this.state.player1X}
-          player1Y = {this.state.player1Y}
-          player2X = {this.state.player2X}
-          player2Y = {this.state.player2Y}
           boardWidth = {this.state.boardWidth}
           leftOffset = {this.state.leftOffset}
           x = {this.state.ballX}
           y = {this.state.ballY}
-          xVelocity = {this.state.ballXVelocity}
-          yVelocity = {this.state.ballYVelocity}
-          changeCoord = {(key, newCoord, direction) => this.changeCoord(key, newCoord, direction)}
           updateScore = {(key) => this.props.updateScore(key)}
           resetBoard = {() => this.resetBoard()}
           challenger = {this.props.challenger}
