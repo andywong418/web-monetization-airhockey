@@ -75,7 +75,7 @@ io.on('connection', socket => {
     await plugin.connect();
     console.log('sending payment to ' + winner );
     await SPSP.pay(plugin, {
-      receiver: '$' + winner,
+      receiver: winner,
       sourceAmount: '200'
     });
     console.log("paid");
